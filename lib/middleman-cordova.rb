@@ -1,6 +1,6 @@
 require "middleman-core"
 
-Middleman::Extensions.register :middleman-cordova do
-  require "my-extension/extension"
-  MyExtension
+Middleman::Extensions.register :cordova do
+  require "middleman-cordova/extension"
+  MiddlemanCordovaExtension
 end
