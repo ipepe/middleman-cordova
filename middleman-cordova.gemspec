@@ -3,13 +3,13 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "middleman-cordova"
-  s.version     = "0.0.1"
+  s.version     = "0.1.0"
   s.platform    = Gem::Platform::RUBY
-  # s.authors     = ["Your Name"]
-  # s.email       = ["email@example.com"]
-  # s.homepage    = "http://example.com"
-  # s.summary     = %q{A short summary of your extension}
-  # s.description = %q{A longer description of your extension}
+  s.authors     = ["Patryk Ptasiński"]
+  s.email       = ["patryk@ipepe.pl"]
+  s.homepage    = "https://github.com/ipepe/middleman-cordova"
+  s.summary     = %q{Middleman integrated with Cordova}
+  s.description = %q{Middleman integrated with Cordova to build hybrid apps}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
