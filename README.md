@@ -1,7 +1,8 @@
 # middleman-cordova
-Middleman integrated with Cordova to build hybrid apps
+WARNING! This is work in progress! Use at Your own responsibility!
+Middleman integrated with Cordova to build hybrid apps.
 
-# Middleman cofig.rb
+# Middleman config.rb
 ```ruby
 activate :cordova do |cordova|
   cordova.package_id = 'com.cogibyte.devapp'
@@ -13,3 +14,12 @@ activate :cordova do |cordova|
   cordova.build_dir_expires_in_minutes = 60*4
 end
 ```
+
+# Middleman commands
+`middleman run ios`
+
+`middleman run android`
+
+`middleman openide ios`
+
+`middleman openide android`
