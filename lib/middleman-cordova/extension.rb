@@ -3,7 +3,11 @@ require 'middleman-core'
 
 # Extension namespace
 class MiddlemanCordovaExtension < ::Middleman::Extension
+  class << self
+    attr_accessor :options
+  end
   option :package_id, 'org.example.app', 'Application package identifier (org.example.app)'
+  option :application_name, 'Example App', 'Application name'
   option :version, '0.1.0', 'Application version'
   option :author, {
     href: 'http://cordova.io',
@@ -14,28 +18,9 @@ class MiddlemanCordovaExtension < ::Middleman::Extension
   option :hooks, [], 'Cordova file hook names to run when building'
   option :plugins, [], 'Cordova plugins to include when building Application'
   option :build_dir_expires_in_minutes, 60, 'After what time, the cordova build directory should be rebuild'
-
-  def initialize(app, options_hash = {}, &block)
-    # Call super to build options from the options_hash
-    super
-
-    # Require libraries only when activated
-    # require 'necessary/library'
-
-    # set up your extension
-    # puts options.my_option
-  end
+  option :build_before, true, 'Should integration build website before deploying to Mobile device'
 
   def after_configuration
-    # Do something
+    ::MiddlemanCordovaExtension.options = options
   end
-
-  # A Sitemap Manipulator
-  # def manipulate_resource_list(resources)
-  # end
-
-  # helpers do
-  #   def a_helper
-  #   end
-  # end
 end
