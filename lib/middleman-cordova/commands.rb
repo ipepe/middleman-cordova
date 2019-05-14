@@ -31,6 +31,10 @@ module Middleman
                    aliases: '-b',
                    desc: 'Run `middleman build` before the cordova step'
 
+      class_option :recreate,
+                   type: :boolean,
+                   desc: 'Switch to destroy whole cordova build directory and rebuild it from scratch'
+
       def self.subcommand_help(_options)
         # TODO
       end
@@ -55,9 +59,20 @@ module Middleman
         case task
         when 'help'
           print_help
-        when 'run'
-          build_before(options)
+        when 'build'
           inside(ensure_cordova_build_directory) do
+            build_before(options)
+            if platform == 'android'
+              run("cordova build android")
+            elsif platform == 'ios'
+              run("cordova build ios")
+            else
+              print_help
+            end
+          end
+        when 'run'
+          inside(ensure_cordova_build_directory) do
+            build_before(options)
             if platform == 'android'
               run("cordova run android")
             elsif platform == 'ios'
@@ -84,19 +99,15 @@ module Middleman
       protected
 
       def ensure_cordova_build_directory
-        if config_xml_exists?
-          if build_dir_expired?
-            FileUtils.rm_rf(cordova_build_dir_path)
-            create_cordova_build
-          end
-        else
+        if options['recreate']
+          FileUtils.rm_rf(cordova_build_dir_path)
           create_cordova_build
         end
         cordova_build_dir_path
       end
 
       def cordova_build_dir_path
-        @cordova_build_dir_path ||= Dir.pwd + '/cordova_build'
+        @cordova_build_dir_path ||= [Dir.pwd, cordova_options.cordova_build_dir].join('/')
       end
 
       def config_xml_exists?
@@ -119,6 +130,9 @@ module Middleman
         inside(cordova_build_dir_path) do
           cordova_options.platforms.each do |platform|
             run("cordova platform add #{platform}")
+          end
+          cordova_options.plugins.each do |plugin_name|
+            run("cordova plugin add cordova-plugin-#{plugin_name}")
           end
         end
       end
