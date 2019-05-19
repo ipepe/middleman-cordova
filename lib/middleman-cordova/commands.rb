@@ -171,7 +171,7 @@ module Middleman
         xml_handle.css('author')[0].attribute('email').value = cordova_options.author[:email]
         xml_handle.css('author')[0].attribute('href').value = cordova_options.author[:href]
 
-        cordova_options.config_inside_platform.each do |platform, xml|
+        cordova_options.config_xml_inside_platform.each do |platform, xml|
           xml_handle.css("platform[name='#{platform}']").first.add_child("\n" + xml)
         end
 
@@ -182,7 +182,7 @@ module Middleman
       end
 
       def xml_after_platforms
-        cordova_options.config_inject_xml_after_platforms
+        cordova_options.config_xml_after_platforms
       end
 
       def copy_res_and_hooks
