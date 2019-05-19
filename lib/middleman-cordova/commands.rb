@@ -56,9 +56,8 @@ module Middleman
           ::Middleman::Logger.singleton(verbose, instrument)
         end
 
-
-        pwd
-        cordova_build_dir_path
+        # create variables before changing any directories
+        prepopulate_path_variables
 
         case task
         when 'help'
@@ -101,6 +100,11 @@ module Middleman
       end
 
       protected
+
+      def prepopulate_path_variables
+        pwd
+        cordova_build_dir_path
+      end
 
       def ensure_cordova_build_directory
         if options['recreate']

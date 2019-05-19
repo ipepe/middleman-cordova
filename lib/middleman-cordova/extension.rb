@@ -19,8 +19,8 @@ class MiddlemanCordovaExtension < ::Middleman::Extension
   option :plugins, [], 'Cordova plugins to include when building Application'
   option :build_before, true, 'Should integration build website before deploying to Mobile device'
 
-  option :config_inside_platform, {}, 'XML snippet to inject into cordovas config.xml inside specific platform'
-  option :config_inject_xml_after_platforms, '', 'XML snippet to inject into cordovas config.xml'
+  option :config_xml_inside_platform, {}, 'XML snippet to inject into cordovas config.xml inside specific platform'
+  option :config_xml_after_platforms, '', 'XML snippet to inject into cordovas config.xml'
 
   expose_to_template :cordova
   def cordova
