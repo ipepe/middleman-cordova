@@ -9,20 +9,20 @@ Building apps with cordova is often frustrating, because many times something wi
 ```ruby
 activate :cordova do |cordova|
   cordova.package_id = 'com.cogibyte.devapp'
+  cordova.application_name = 'DevApp'
   cordova.version = [1, Time.now.strftime('%y%m'), Time.now.strftime('%d%H%M')].join('.')
   cordova.author = { email: 'apps@cogibyte.com', href: 'cogibyte.com', name: 'CogiByte' }
   cordova.platforms = [:android, :ios]
-  cordova.hooks = ['prepareIconsAndSplashScreens.sh']
-  cordova.plugins = []
-  cordova.build_dir_expires_in_minutes = 60*4
+  cordova.hooks = {"after_prepare": 'prepareIconsAndSplashScreens.sh'}
+  cordova.plugins = ['device', 'splashscreen']
+  cordova.cordova_build_dir = 'cordova'
+  cordova.config_inside_platform[:android] = <<-XML
+    <icon src="res/icon.png"/>
+  XML
 end
 ```
 
 # Middleman commands
-`middleman run ios`
-
-`middleman run android`
-
-`middleman openide ios`
-
-`middleman openide android`
+`middleman run [ios|android]`
+`middleman build [ios|android]`
+`middleman openide [ios|android]`

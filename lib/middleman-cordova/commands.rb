@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'nokogiri'
 
 module Middleman
   module Cli
@@ -56,12 +57,15 @@ module Middleman
         end
 
 
+        pwd
+        cordova_build_dir_path
+
         case task
         when 'help'
           print_help
         when 'build'
           inside(ensure_cordova_build_directory) do
-            build_before(options)
+            integrate_middleman_with_cordova
             if platform == 'android'
               run("cordova build android")
             elsif platform == 'ios'
@@ -72,7 +76,7 @@ module Middleman
           end
         when 'run'
           inside(ensure_cordova_build_directory) do
-            build_before(options)
+            integrate_middleman_with_cordova
             if platform == 'android'
               run("cordova run android")
             elsif platform == 'ios'
@@ -107,7 +111,11 @@ module Middleman
       end
 
       def cordova_build_dir_path
-        @cordova_build_dir_path ||= [Dir.pwd, cordova_options.cordova_build_dir].join('/')
+        @cordova_build_dir_path ||= [pwd, cordova_options.cordova_build_dir].join('/')
+      end
+
+      def pwd
+        @pwd ||= Dir.pwd
       end
 
       def config_xml_exists?
@@ -139,6 +147,46 @@ module Middleman
 
       def print_help
         puts "Wrong command"
+      end
+
+      def integrate_middleman_with_cordova
+        inside(pwd) do
+          build_before(options)
+        end
+        amend_cordova_config_xml
+        copy_res_and_hooks
+      end
+
+      def amend_cordova_config_xml
+        original_xml = File.read(cordova_build_dir_path + '/config.xml')
+        xml_handle = Nokogiri::XML(original_xml)
+        xml_handle.css('widget').attr('version', cordova_options.version)
+        xml_handle.css('description')[0].content = cordova_options.application_name
+
+        xml_handle.css('author')[0].content = cordova_options.author[:name]
+        xml_handle.css('author')[0].attribute('email').value = cordova_options.author[:email]
+        xml_handle.css('author')[0].attribute('href').value = cordova_options.author[:href]
+
+        cordova_options.config_inside_platform.each do |platform, xml|
+          xml_handle.css("platform[name='#{platform}']").first.add_child("\n" + xml)
+        end
+
+        xml_handle.css('platform').last.add_next_sibling("\n" + xml_after_platforms)
+
+        File.write(cordova_build_dir_path + '/config.xml', xml_handle.to_xml)
+        puts "Updated config.xml with middleman cordova config"
+      end
+
+      def xml_after_platforms
+        cordova_options.config_inject_xml_after_platforms
+      end
+
+      def copy_res_and_hooks
+        if File.directory?(pwd + '/res')
+          FileUtils.mkdir_p(cordova_build_dir_path + '/res')
+          FileUtils.cp_r(pwd + '/res', cordova_build_dir_path)
+          puts "Copied res folder into cordova build dir"
+        end
       end
 
       def build_before(options = {})

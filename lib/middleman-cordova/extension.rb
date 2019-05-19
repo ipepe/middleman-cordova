@@ -16,10 +16,11 @@ class MiddlemanCordovaExtension < ::Middleman::Extension
     name: 'Apache Cordova Team'
   }, 'Application author (hash that contains: name, href, email)'
   option :platforms, [], 'Application platforms to compile'
-  option :hooks, {}, 'Cordova file hook names to run when building'
   option :plugins, [], 'Cordova plugins to include when building Application'
-  option :build_dir_expires_in_minutes, 60, 'After what time, the cordova build directory should be rebuild'
   option :build_before, true, 'Should integration build website before deploying to Mobile device'
+
+  option :config_inside_platform, {}, 'XML snippet to inject into cordovas config.xml inside specific platform'
+  option :config_inject_xml_after_platforms, '', 'XML snippet to inject into cordovas config.xml'
 
   expose_to_template :cordova
   def cordova
