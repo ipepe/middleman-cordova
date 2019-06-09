@@ -70,12 +70,13 @@ module Middleman
           inside(ensure_cordova_build_directory) do
             integrate_middleman_with_cordova
             if platform == 'android'
-              run("cordova build android#{release}")
+              run("cordova build android#{release(:android)}")
             elsif platform == 'ios'
-              run("cordova build ios#{release}")
+              run("cordova build ios#{release(:ios)}")
             else
               print_help
             end
+            move_up_build_artifacts(platform)
           end
         when 'run'
           inside(ensure_cordova_build_directory) do
@@ -110,9 +111,22 @@ module Middleman
         cordova_build_dir_path
       end
 
-      def release
+      def release(platform)
         if options['release']
-          ' --release'
+          if cordova_options.platform_release_arguments[platform].present?
+            ' --release -- ' + cordova_options.platform_release_arguments[platform]
+          else
+            ' --release'
+          end
+        end
+      end
+
+      def move_up_build_artifacts(platform)
+        if options['release']
+          FileUtils.mkdir_p(dist)
+          if platform == 'android'
+            FileUtils.cp("./platforms/android/app/build/outputs/apk/release/*.apk", dist)
+          end
         end
       end
 
@@ -129,11 +143,15 @@ module Middleman
       end
 
       def cordova_build_dir_path
-        @cordova_build_dir_path ||= [pwd, cordova_options.cordova_build_dir].join('/')
+        @cordova_build_dir_path ||= File.join(pwd, cordova_options.cordova_build_dir)
       end
 
       def pwd
         @pwd ||= Dir.pwd
+      end
+
+      def dist
+        File.join(pwd, 'dist')
       end
 
       def config_xml_exists?

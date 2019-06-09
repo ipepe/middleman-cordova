@@ -13,15 +13,13 @@ activate :cordova do |cordova|
   cordova.version = [1, Time.now.strftime('%y%m'), Time.now.strftime('%d%H%M')].join('.')
   cordova.author = { email: 'apps@cogibyte.com', href: 'cogibyte.com', name: 'CogiByte' }
   cordova.platforms = [:android, :ios]
+  cordova.platform_release_arguments[:android] = '--keystore="/path" --password=password --storePassword=password --alias=alias'
   cordova.plugins = ['device', 'splashscreen']
-  cordova.cordova_build_dir = 'cordova'
   cordova.config_xml_inside_platform[:android] = <<-XML
     <icon src="res/icon.png"/>
   XML
-  cordova.config_xml_after_platforms = <<-XML
-    <preference name="orientation" value="portrait"/>
-    <preference name="ShowSplashScreenSpinner" value="false"/>
-    <hook src="res/prepareIconsAndSplashScreens.sh" type="after_prepare"/>
+  cordova.config_xml_inside_platform[:ios] = <<-XML
+    <icon src="res/icon-ios.png"/>
   XML
 end
 ```
