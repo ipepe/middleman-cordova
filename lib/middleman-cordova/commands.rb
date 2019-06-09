@@ -107,11 +107,15 @@ module Middleman
       end
 
       def ensure_cordova_build_directory
-        if options['recreate']
+        if options['recreate'] || !cordova_build_directory_exists?
           FileUtils.rm_rf(cordova_build_dir_path)
           create_cordova_build
         end
         cordova_build_dir_path
+      end
+
+      def cordova_build_directory_exists?
+        File.directory?(cordova_build_dir_path) && config_xml_exists?
       end
 
       def cordova_build_dir_path
@@ -172,7 +176,7 @@ module Middleman
         xml_handle.css('author')[0].attribute('href').value = cordova_options.author[:href]
 
         cordova_options.config_xml_inside_platform.each do |platform, xml|
-          xml_handle.css("platform[name='#{platform}']").first.add_child("\n" + xml)
+          xml_handle.at_css("platform[name='#{platform}']").add_child("\n" + xml)
         end
 
         xml_handle.css('platform').last.add_next_sibling("\n" + xml_after_platforms)
