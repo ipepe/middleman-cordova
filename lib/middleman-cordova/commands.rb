@@ -36,6 +36,10 @@ module Middleman
                    type: :boolean,
                    desc: 'Switch to destroy whole cordova build directory and rebuild it from scratch'
 
+      class_option :release,
+                   type: :boolean,
+                   desc: 'Switch to build production ready and signed build'
+
       def self.subcommand_help(_options)
         # TODO
       end
@@ -66,9 +70,9 @@ module Middleman
           inside(ensure_cordova_build_directory) do
             integrate_middleman_with_cordova
             if platform == 'android'
-              run("cordova build android")
+              run("cordova build android#{release}")
             elsif platform == 'ios'
-              run("cordova build ios")
+              run("cordova build ios#{release}")
             else
               print_help
             end
@@ -104,6 +108,12 @@ module Middleman
       def prepopulate_path_variables
         pwd
         cordova_build_dir_path
+      end
+
+      def release
+        if options['release']
+          ' --release'
+        end
       end
 
       def ensure_cordova_build_directory
@@ -148,7 +158,7 @@ module Middleman
             run("cordova platform add #{platform}")
           end
           cordova_options.plugins.each do |plugin_name|
-            run("cordova plugin add cordova-plugin-#{plugin_name}")
+            run("cordova plugin add #{plugin_name}")
           end
         end
       end
