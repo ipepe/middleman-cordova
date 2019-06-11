@@ -82,12 +82,13 @@ module Middleman
           inside(ensure_cordova_build_directory) do
             integrate_middleman_with_cordova
             if platform == 'android'
-              run("cordova run android")
+              run("cordova run android#{release(:android)}")
             elsif platform == 'ios'
-              run("cordova run ios")
+              run("cordova run ios#{release(:ios)}")
             else
               print_help
             end
+            move_up_build_artifacts(platform)
           end
         when 'openide'
           inside(ensure_cordova_build_directory) do
@@ -125,7 +126,8 @@ module Middleman
         if options['release']
           FileUtils.mkdir_p(dist)
           if platform == 'android'
-            FileUtils.cp("./platforms/android/app/build/outputs/apk/release/*.apk", dist)
+            FileUtils.rm_rf(File.join(dist, '*.apk'))
+            `cp ./platforms/android/app/build/outputs/apk/release/*.apk #{dist}`
           end
         end
       end
@@ -151,7 +153,7 @@ module Middleman
       end
 
       def dist
-        File.join(pwd, 'dist')
+        File.join(pwd, cordova_options.build_artifacts_path)
       end
 
       def config_xml_exists?

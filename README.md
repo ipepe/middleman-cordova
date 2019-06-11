@@ -15,6 +15,7 @@ activate :cordova do |cordova|
   cordova.platforms = [:android, :ios]
   cordova.platform_release_arguments[:android] = '--keystore="/path" --password=password --storePassword=password --alias=alias'
   cordova.plugins = ['device', 'splashscreen']
+  cordova.build_artifacts_path = 'build' # default = 'dist'
   cordova.config_xml_inside_platform[:android] = <<-XML
     <icon src="res/icon.png"/>
   XML

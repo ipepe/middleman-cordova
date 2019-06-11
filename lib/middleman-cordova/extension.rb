@@ -20,6 +20,7 @@ class MiddlemanCordovaExtension < ::Middleman::Extension
   option :build_before, true, 'Should integration build website before deploying to Mobile device'
 
   option :platform_release_arguments, {}
+  option :build_artifacts_path, 'dist'
 
   option :config_xml_inside_platform, {}, 'XML snippet to inject into cordovas config.xml inside specific platform'
   option :config_xml_after_platforms, '', 'XML snippet to inject into cordovas config.xml'
