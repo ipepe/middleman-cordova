@@ -3,7 +3,7 @@ WARNING! This is work in progress! Use at Your own responsibility!
 Middleman integrated with Cordova to build hybrid apps.
 
 # Why
-Building apps with cordova is often frustrating, because many times something will break and You have to create whole cordova project from scratch. This extension for Middleman treats cordova as build tool, and whole cordova directory as artifacts. Rebuilding whole cordova project is a simple task that will be done for You by this extesion.
+Building apps with cordova is often frustrating. Many times something will break and You have to create whole cordova project from scratch. This extension for Middleman treats cordova as build tool, and whole cordova directory as artifacts. Rebuilding whole cordova project is a simple task that will be done for You by this extesion.
 
 # Middleman config.rb
 ```ruby
