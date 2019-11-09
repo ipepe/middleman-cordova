@@ -26,6 +26,6 @@ end
 ```
 
 # Middleman commands
-`middleman run [ios|android]`
-`middleman build [ios|android]`
-`middleman openide [ios|android]`
+`middleman cordova run [ios|android]`
+`middleman cordova build [ios|android]`
+`middleman cordova openide [ios|android]`
