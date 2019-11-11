@@ -95,7 +95,11 @@ module Middleman
             if platform == 'android'
               raise NotImplementedError
             elsif platform == 'ios'
-              raise NotImplementedError
+              if RUBY_PLATFORM.include?('darwin') # Mac OS X
+                run("open -a \"Xcode\" #{cordova_build_dir_path}/platforms/ios/#{cordova_options[:application_name]}.xcworkspace/")
+              else
+                raise NotImplementedError
+              end
             else
               print_help
             end
@@ -175,7 +179,7 @@ module Middleman
         # TODO: link build into www inside cordova dir
         inside(cordova_build_dir_path) do
           cordova_options.platforms.each do |platform|
-            run("cordova platform add #{platform}")
+            run("cordova platform add #{platform}@latest")
           end
           cordova_options.plugins.each do |plugin_name|
             run("cordova plugin add #{plugin_name}")
