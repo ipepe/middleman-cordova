@@ -16,6 +16,7 @@ class MiddlemanCordovaExtension < ::Middleman::Extension
     name: 'Apache Cordova Team'
   }, 'Application author (hash that contains: name, href, email)'
   option :platforms, [], 'Application platforms to compile'
+  option :platform_versions, {}, 'Platform versions to specify during cordova platform add'
   option :plugins, [], 'Cordova plugins to include when building Application'
   option :build_before, true, 'Should integration build website before deploying to Mobile device'
 

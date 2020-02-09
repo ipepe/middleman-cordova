@@ -179,7 +179,8 @@ module Middleman
         # TODO: link build into www inside cordova dir
         inside(cordova_build_dir_path) do
           cordova_options.platforms.each do |platform|
-            run("cordova platform add #{platform}@latest")
+            platform_version = cordova_options.platform_versions.try(:[], platform) || 'latest'
+            run("cordova platform add #{platform}@#{platform_version}")
           end
           cordova_options.plugins.each do |plugin_name|
             run("cordova plugin add #{plugin_name}")
