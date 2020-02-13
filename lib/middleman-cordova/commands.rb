@@ -189,7 +189,8 @@ module Middleman
       end
 
       def print_help
-        puts "Wrong command"
+        run('cordova -v')
+        raise NotImplementedError
       end
 
       def integrate_middleman_with_cordova
