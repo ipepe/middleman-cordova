@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'fileutils'
 require 'nokogiri'
 
@@ -165,16 +167,16 @@ module Middleman
       end
 
       def build_dir_expired?
-        true #TODO: fix when false
+        true # TODO: fix when false
       end
 
       def create_cordova_build
         FileUtils.mkdir_p(cordova_build_dir_path)
         run([
-              "cordova create",
-              cordova_build_dir_path,
-              cordova_options[:package_id],
-              cordova_options[:application_name]
+          'cordova create',
+          cordova_build_dir_path,
+          cordova_options[:package_id],
+          cordova_options[:application_name]
         ].join(' '))
         # TODO: link build into www inside cordova dir
         inside(cordova_build_dir_path) do
@@ -202,6 +204,8 @@ module Middleman
       end
 
       def amend_cordova_config_xml
+        return unless File.exist?(cordova_build_dir_path + '/config.xml')
+
         original_xml = File.read(cordova_build_dir_path + '/config.xml')
         xml_handle = Nokogiri::XML(original_xml)
         xml_handle.css('widget').attr('version', cordova_options.version)
@@ -218,7 +222,7 @@ module Middleman
         xml_handle.css('platform').last.add_next_sibling("\n" + xml_after_platforms)
 
         File.write(cordova_build_dir_path + '/config.xml', xml_handle.to_xml)
-        puts "Updated config.xml with middleman cordova config"
+        puts 'Updated config.xml with middleman cordova config'
       end
 
       def xml_after_platforms
@@ -229,7 +233,7 @@ module Middleman
         if File.directory?(pwd + '/res')
           FileUtils.mkdir_p(cordova_build_dir_path + '/res')
           FileUtils.cp_r(pwd + '/res', cordova_build_dir_path)
-          puts "Copied res folder into cordova build dir"
+          puts 'Copied res folder into cordova build dir'
         end
       end
 
@@ -243,7 +247,7 @@ module Middleman
       end
 
       def print_usage_and_die(message)
-        fail StandardError, "ERROR: #{message}"
+        raise StandardError, "ERROR: #{message}"
       end
 
       def cordova_options
