@@ -176,7 +176,7 @@ module Middleman
           'cordova create',
           cordova_build_dir_path,
           cordova_options[:package_id],
-          cordova_options[:application_name]
+          cordova_options[:application_name].inspect
         ].join(' '))
         # TODO: link build into www inside cordova dir
         inside(cordova_build_dir_path) do
